@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors({
 //   origin: 'http://localhost:5173',
-origin: 'https://cfc89e5e1ddc.ngrok-free.app',
+origin: ['http://localhost:5173', 'https://antisporty.netlify.app/'],
+
   credentials: true
 }));
 app.use(express.json());
