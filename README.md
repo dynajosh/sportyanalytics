@@ -1,0 +1,1 @@
+This project scrapes through Sportybet's website, gets the token for a User and then makes the requests to call the user's betting history to send to a frontend application which then graphically analyses the data and shows the user an analysis of their bets.
