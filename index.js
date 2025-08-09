@@ -26,10 +26,19 @@ app.post('/login', async (req, res) => {
   }
 
   try {
+    // const browser = await puppeteer.launch({
+    //   headless: false, // change to true in production
+    //   args: ['--start-maximized']
+    // });
+
     const browser = await puppeteer.launch({
-      headless: false, // change to true in production
-      args: ['--start-maximized']
-    });
+        headless: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+        ]
+        });
+
     const page = await browser.newPage();
 
     // Go to login page
@@ -47,7 +56,6 @@ app.post('/login', async (req, res) => {
 
     // Grab cookies
     const allCookies = await page.cookies();
-    console.log("All cookies:", allCookies);
 
     // Find accessToken in cookies
     const tokenCookie = allCookies.find(c => c.name === 'accessToken');
