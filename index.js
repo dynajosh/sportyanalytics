@@ -86,80 +86,26 @@ app.post('/login', async (req, res) => {
   }
 
   try {
-    // Try to let Puppeteer find Chrome automatically first
-    let browser;
-    try {
-      browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--single-process',
-          '--disable-gpu'
-        ]
-      });
-    } catch (error) {
-      console.log('Auto-detection failed, trying manual path detection...');
-      
-      // Manual path detection as fallback
-      const fs = require('fs');
-      const path = require('path');
-      
-      function findChrome() {
-        const possiblePaths = [
-          '/opt/render/.cache/puppeteer/chrome',
-          '/usr/bin/google-chrome-stable',
-          '/usr/bin/google-chrome',
-          '/usr/bin/chromium-browser'
-        ];
+    console.log('Attempting to launch browser...');
+    
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding'
+      ]
+    });
 
-        // Check cache directory first
-        const cacheDir = '/opt/render/.cache/puppeteer/chrome';
-        if (fs.existsSync(cacheDir)) {
-          const versions = fs.readdirSync(cacheDir);
-          for (const version of versions) {
-            const chromePath = path.join(cacheDir, version, 'chrome-linux64', 'chrome');
-            if (fs.existsSync(chromePath)) {
-              return chromePath;
-            }
-          }
-        }
-
-        // Check system paths
-        for (const chromePath of possiblePaths.slice(1)) {
-          if (fs.existsSync(chromePath)) {
-            return chromePath;
-          }
-        }
-        return null;
-      }
-
-      const chromePath = findChrome();
-      console.log('Chrome path found:', chromePath);
-
-      if (!chromePath) {
-        throw new Error('Chrome executable not found');
-      }
-
-      browser = await puppeteer.launch({
-        headless: true,
-        executablePath: chromePath,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--single-process',
-          '--disable-gpu'
-        ]
-      });
-    }
+    console.log('Browser launched successfully');
 
     const page = await browser.newPage();
 
