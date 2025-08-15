@@ -133,7 +133,7 @@ app.post('/login', async (req, res) => {
     await page.click('.af-button--primary');
 
     // Wait for balance wrapper to appear — indicates successful login
-    await page.waitForSelector('.m-bablance-wrapper', { timeout: 15000 });
+    await page.waitForSelector('.m-bablance-wrapper', { timeout: 45000 });
 
     // Grab cookies
     const allCookies = await page.cookies();
