@@ -71,6 +71,7 @@ app.post('/login', async (req, res) => {
     }
 
     await browser.close();
+    console.log('Browser closed successfully');
 
     if (!accessToken) {
       return res.status(500).json({ error: 'Access token not found.' });
@@ -93,7 +94,7 @@ app.get('/history', async (req, res) => {
   const accessToken = authHeader.replace('Bearer ', '').trim();
 
   try {
-    const url = 'https://www.sportybet.com/api/ng/orders/order/v2/realbetlist?isSettled=10&pageSize=300&pageNo=1';
+    const url = 'https://www.sportybet.com/api/ng/orders/order/v2/realbetlist?isSettled=10&pageSize=230&pageNo=1';
     const response = await axios.get(url, {
       headers: {
         'cookie': 'accessToken=' + accessToken,
@@ -101,7 +102,6 @@ app.get('/history', async (req, res) => {
         'Accept': 'application/json',
       },
     });
-
     return res.status(200).json(response.data?.data?.entityList);
 
   } catch (error) {
