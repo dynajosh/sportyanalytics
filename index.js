@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
 dotenv.config();
 app.use(cors({
 //   origin: 'http://localhost:5173',
-origin: ['http://localhost:5173', 'https://antisporty.netlify.app/'],
+origin: ['http://localhost:5173', 'https://antisporty.netlify.app'],
 
   credentials: true
 }));
@@ -19,65 +19,6 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-// app.post('/login', async (req, res) => {
-//   const { username, password } = req.body;
-//   if (!username || !password) {
-//     return res.status(400).json({ error: 'Username and password are required.' });
-//   }
-
-//   try {
-//     // const browser = await puppeteer.launch({
-//     //   headless: false, // change to true in production
-//     //   args: ['--start-maximized']
-//     // });
-
-//     const browser = await puppeteer.launch({
-//         headless: true,
-//         args: [
-//             '--no-sandbox',
-//             '--disable-setuid-sandbox'
-//         ]
-//         });
-
-//     const page = await browser.newPage();
-
-//     // Go to login page
-//     await page.goto('https://www.sportybet.com/ng/login', { waitUntil: 'networkidle2' });
-
-//     // Enter credentials
-//     await page.type('[placeholder="Mobile Number"]', username);
-//     await page.type('[placeholder="Password"]', password);
-
-//     // Click login
-//     await page.click('.af-button--primary');
-
-//     // Wait for balance wrapper to appear — indicates successful login
-//     await page.waitForSelector('.m-bablance-wrapper', { timeout: 15000 });
-
-//     // Grab cookies
-//     const allCookies = await page.cookies();
-
-//     // Find accessToken in cookies
-//     const tokenCookie = allCookies.find(c => c.name === 'accessToken');
-//     let accessToken = null;
-//     if (tokenCookie) {
-//       accessToken = decodeURIComponent(tokenCookie.value);
-//       console.log("Access Token Found:", accessToken);
-//     }
-
-//     await browser.close();
-
-//     if (!accessToken) {
-//       return res.status(500).json({ error: 'Access token not found.' });
-//     }
-
-//     return res.status(200).json({ accessToken });
-
-//   } catch (error) {
-//     console.error('Error:', error);
-//     res.status(500).json({ error: 'An error occurred while processing the login.' });
-//   }
-// });
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -88,23 +29,6 @@ app.post('/login', async (req, res) => {
   try {
     console.log('Attempting to launch browser...');
     
-    // const browser = await puppeteer.launch({
-    //   headless: true,
-    //   args: [
-    //     '--no-sandbox',
-    //     '--disable-setuid-sandbox',
-    //     '--disable-dev-shm-usage',
-    //     '--disable-accelerated-2d-canvas',
-    //     '--no-first-run',
-    //     '--no-zygote',
-    //     '--single-process',
-    //     '--disable-gpu',
-    //     '--disable-background-timer-throttling',
-    //     '--disable-backgrounding-occluded-windows',
-    //     '--disable-renderer-backgrounding'
-    //   ]
-    // });
-
     const browser = await puppeteer.launch({
     args: [
       "--disable-setuid-sandbox",
@@ -143,7 +67,7 @@ app.post('/login', async (req, res) => {
     let accessToken = null;
     if (tokenCookie) {
       accessToken = decodeURIComponent(tokenCookie.value);
-      console.log("Access Token Found:", accessToken);
+      // console.log("Access Token Found:", accessToken);
     }
 
     await browser.close();
@@ -167,9 +91,6 @@ app.get('/history', async (req, res) => {
   }
 
   const accessToken = authHeader.replace('Bearer ', '').trim();
-  console.log("Access Token received from Bearer:", accessToken);
-
-  console.log("this is the access token", accessToken);
 
   try {
     const url = 'https://www.sportybet.com/api/ng/orders/order/v2/realbetlist?isSettled=10&pageSize=300&pageNo=1';
